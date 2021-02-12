@@ -19,7 +19,7 @@ const card = {
   openprod: "",
   feature: "",
   action:
-    "Gasta 1 (w) y 1 (b) para ganar 2 (p) y si se hace largo seguro me va a andar mal esto claramente no? Que te parece?",
+    "Gasta 1 (w) y 1 (b) para ganar 2 (p) y si se hace largo seguroa adsad fasd fasdsdaf asd fasd fads  asfd fasd fdasf asd fads fadsdddadf asdf ads fasd f me va a andar mal esto claramente no? Que te parece?",
   buildingbonus: "La lal lal al a",
   deal: "Worker",
   quantity: "1",
@@ -103,21 +103,21 @@ const drawCardText = (data) => {
     data.buildingbonus
   );
 
-  //180, 160 starting point text
   let initText = "";
   let initTextHeight = 135;
   let initTextSize = 0;
+  const lineHeight = 35;
   if (data.production) {
     initText = "Producción: ".toUpperCase();
     initTextSize = writeText(initText, 180, initTextHeight);
-    ctx.font = "20pt Myriad Pro Cond";
+
     initTextHeight += wrapText(
       ctx,
       data.production,
       180 + initTextSize,
       135,
-      525 - initTextSize,
-      30,
+      450 - initTextSize,
+      lineHeight,
       initTextSize
     );
   }
@@ -130,22 +130,21 @@ const drawCardText = (data) => {
       data.openprod,
       180 + initTextSize,
       135,
-      525 - initTextSize,
-      30,
+      450 - initTextSize,
+      lineHeight,
       initTextSize
     );
   }
   if (data.feature) {
     initText = "Apoyo: ".toUpperCase();
     initTextSize = writeText(initText, 180, initTextHeight);
-    ctx.font = "20pt Myriad Pro Cond";
     initTextHeight += wrapText(
       ctx,
       data.feature,
       180 + initTextSize,
       135,
-      525 - initTextSize,
-      30,
+      450 - initTextSize,
+      lineHeight,
       initTextSize
     );
   }
@@ -153,29 +152,32 @@ const drawCardText = (data) => {
   if (data.action) {
     initText = "Acción: ".toUpperCase();
     initTextSize = writeText(initText, 180, initTextHeight);
-    ctx.font = "20pt Myriad Pro Cond";
+    console.log(initTextSize);
+    console.log(initTextHeight);
+
     initTextHeight += wrapText(
       ctx,
       data.action,
       180 + initTextSize,
-      135,
-      525 - initTextSize,
-      30,
+      initTextHeight,
+      450 - initTextSize,
+      lineHeight,
       initTextSize
     );
+    console.log(initTextHeight);
   }
 
   if (data.buildingbonus) {
     initText = "Bonus de Construcción: ".toUpperCase();
-    initTextSize = writeText(initText, 180, 200);
+    initTextSize = writeText(initText, 180, initTextHeight);
     ctx.font = "20pt Myriad Pro Cond";
     initTextHeight += wrapText(
       ctx,
       data.buildingbonus,
       180 + initTextSize,
-      200,
-      525 - initTextSize,
-      30,
+      initTextHeight,
+      450 - initTextSize,
+      lineHeight,
       initTextSize
     );
   }
@@ -186,6 +188,7 @@ const writeText = (text, x, y, weight) => {
   ctx.fillStyle = "#232320";
   ctx.textAlign = "left";
   ctx.fillText(text, x, y);
+
   const textMetrics = ctx.measureText(text);
   const initTextSize =
     Math.abs(textMetrics.actualBoundingBoxLeft) +
@@ -245,7 +248,6 @@ ctx.lineTo(425, 170);
 ctx.stroke();*/
 
 //ctx.fillStyle = "#3574d4";
-const text = "Almacenamiento de ladrillos";
 //const textWidth = ctx.measureText(text).width;
 //ctx.fillRect(600 - textWidth / 2 - 10, 170 - 5, textWidth + 20, 120);
 
@@ -288,27 +290,33 @@ ctx.fillText("flaviocopes.com", 600, 530);
 });*/
 
 function wrapText(context, text, x, y, maxWidth, lineHeight, tabSize) {
+  //console.log(lineHeight);
+  context.font = "20pt Myriad Pro Cond";
   var words = text.split(" ");
   var line = "";
   var firstLine = true;
+  var lines = 1;
 
   for (var n = 0; n < words.length; n++) {
     var testLine = line + words[n] + " ";
     var metrics = context.measureText(testLine);
     var testWidth = metrics.width;
     if (testWidth > maxWidth && n > 0) {
-      if (!firstLine) {
-        x = x - tabSize;
-      }
       context.fillText(line, x, y);
       line = words[n] + " ";
       y += lineHeight;
-      firstLine = false;
+
       maxWidth = maxWidth + tabSize;
+      if (firstLine) {
+        x = x - tabSize;
+        firstLine = false;
+      }
+      lines++;
     } else {
       line = testLine;
     }
   }
   context.fillText(line, x, y);
-  return y - lineHeight;
+  //  console.log("Y: ", y, "lineheight: ", lineHeight);
+  return lineHeight * lines;
 }
