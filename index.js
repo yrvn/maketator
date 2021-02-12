@@ -15,10 +15,11 @@ const csv = require("csv-parser");
 const card = {
   Nombre: "Clay Pit",
   name: "Pozo de arcilla",
-  production: "1 (b)",
-  openprod: " 1 (d)",
-  feature: "-",
-  action: "Gasta 1 (w) y 1 (b) para ganar 2 (p)",
+  production: "",
+  openprod: "",
+  feature: "",
+  action:
+    "Gasta 1 (w) y 1 (b) para ganar 2 (p) y si se hace largo seguro me va a andar mal esto claramente no? Que te parece?",
   buildingbonus: "La lal lal al a",
   deal: "Worker",
   quantity: "1",
@@ -103,17 +104,93 @@ const drawCardText = (data) => {
   );
 
   //180, 160 starting point text
-  ctx.font = "bold 20pt Myriad Pro";
-  ctx.textBaseline = "top";
-  ctx.fillStyle = "#232320";
-  ctx.textAlign = "left";
-  ctx.fillText("Production: ", 180, 135);
+  let initText = "";
+  let initTextHeight = 135;
+  let initTextSize = 0;
   if (data.production) {
+    initText = "Producción: ".toUpperCase();
+    initTextSize = writeText(initText, 180, initTextHeight);
+    ctx.font = "20pt Myriad Pro Cond";
+    initTextHeight += wrapText(
+      ctx,
+      data.production,
+      180 + initTextSize,
+      135,
+      525 - initTextSize,
+      30,
+      initTextSize
+    );
   }
   if (data.openprod) {
+    initText = "Producción Abierta: ".toUpperCase();
+    initTextSize = writeText(initText, 180, initTextHeight);
+    ctx.font = "20pt Myriad Pro Cond";
+    initTextHeight += wrapText(
+      ctx,
+      data.openprod,
+      180 + initTextSize,
+      135,
+      525 - initTextSize,
+      30,
+      initTextSize
+    );
   }
   if (data.feature) {
+    initText = "Apoyo: ".toUpperCase();
+    initTextSize = writeText(initText, 180, initTextHeight);
+    ctx.font = "20pt Myriad Pro Cond";
+    initTextHeight += wrapText(
+      ctx,
+      data.feature,
+      180 + initTextSize,
+      135,
+      525 - initTextSize,
+      30,
+      initTextSize
+    );
   }
+
+  if (data.action) {
+    initText = "Acción: ".toUpperCase();
+    initTextSize = writeText(initText, 180, initTextHeight);
+    ctx.font = "20pt Myriad Pro Cond";
+    initTextHeight += wrapText(
+      ctx,
+      data.action,
+      180 + initTextSize,
+      135,
+      525 - initTextSize,
+      30,
+      initTextSize
+    );
+  }
+
+  if (data.buildingbonus) {
+    initText = "Bonus de Construcción: ".toUpperCase();
+    initTextSize = writeText(initText, 180, 200);
+    ctx.font = "20pt Myriad Pro Cond";
+    initTextHeight += wrapText(
+      ctx,
+      data.buildingbonus,
+      180 + initTextSize,
+      200,
+      525 - initTextSize,
+      30,
+      initTextSize
+    );
+  }
+};
+
+const writeText = (text, x, y, weight) => {
+  ctx.font = "bold 20pt Myriad Pro Cond";
+  ctx.fillStyle = "#232320";
+  ctx.textAlign = "left";
+  ctx.fillText(text, x, y);
+  const textMetrics = ctx.measureText(text);
+  const initTextSize =
+    Math.abs(textMetrics.actualBoundingBoxLeft) +
+    Math.abs(textMetrics.actualBoundingBoxRight);
+  return initTextSize;
 };
 
 const drawDeal = (data) => {
@@ -209,3 +286,29 @@ ctx.fillText("flaviocopes.com", 600, 530);
   ctx.drawImage(image, 340, 515, 70, 70);
 
 });*/
+
+function wrapText(context, text, x, y, maxWidth, lineHeight, tabSize) {
+  var words = text.split(" ");
+  var line = "";
+  var firstLine = true;
+
+  for (var n = 0; n < words.length; n++) {
+    var testLine = line + words[n] + " ";
+    var metrics = context.measureText(testLine);
+    var testWidth = metrics.width;
+    if (testWidth > maxWidth && n > 0) {
+      if (!firstLine) {
+        x = x - tabSize;
+      }
+      context.fillText(line, x, y);
+      line = words[n] + " ";
+      y += lineHeight;
+      firstLine = false;
+      maxWidth = maxWidth + tabSize;
+    } else {
+      line = testLine;
+    }
+  }
+  context.fillText(line, x, y);
+  return y - lineHeight;
+}
