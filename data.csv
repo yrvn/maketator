@@ -1,42 +1,8 @@
-Nombre,Español,Production,Open Production,Feature,Action,Building Bonus,Deal,Cantidad,Set
-Clay Pit,Pozo de arcilla,,,,Gasta 1 (w) y 1 (b) para ganar 2 (p),,Brick,1,51st State
-Skyscraper,Rascacielos,,,,Gasta 1 (w) y 2 (b) para ganar 3 (p),,Brick,2,51st State
-Excavator,Excavadora,,1 (d),,,,Brick,1,51st State
+Nombre,name,production,openprod,feature,action,buildingbonus,deal,quantity,set
 Brick Storage,Almacenamiento de ladrillos,,,-,,Pone 3 (b) en esta carta. Puedes gastarlos durante tu turno. No los descartes durante la fase de limpieza,Brick,1,51st State
 Abandoned Suburbs,Suburbios abandonados,,,,Gasta 2 (b) para ganar 2 (p). \nPuede ser activada 2 veces,,Brick,1,51st State
-Convoy,Convoy,,,,Gasta 1 (f) para ganar 1 (ab). \nPuede ser activada 2 veces,,Blue Arrow,1,51st State
 Methane Storage,Almacenamiento de metano,,,-,,Pone 3 (f) en esta carta. Puedes gastarlos durante tu turno. No los descartes durante la fase de limpieza,Fuel,1,51st State
-Gasoline Drinkers Den,Guarida de tomadores de gasolina,,,,Gasta 2 (f) para ganar 2 (p). \nPuede ser activada 2 veces,,Fuel,1,51st State
-Refinery,Refinería,,,-,,1 (p) por cada (lb) en tu Estado. Máximo 5,Fuel,1,51st State
-Gasoline Cultist,Cultista de la gasolina,,,,Gasta 1 (ab) para ganar 1 (p). \nPuede ser activada 2 veces,,Fuel,1,51st State
-Oil Trader,Comerciante de petróleo,,,,Gasta 1 (f) para ganar 1 (p). \nPuede ser activada 2 veces,,Fuel,1,51st State
-Radioactive Fuel,Combustible radiactivo,,,,Gasta 1 (w) y 1 (f) para ganar 2 (p),,Fuel,2,51st State
-Oilmen Fortress,Fortaleza de los petroleros,,,,Gasta 1 (w) y 2 (f) para ganar 3 (p),,Fuel,2,51st State
 Negotiator,Negociador,,,,Gasta 1 (w) y descarta 1 de tus Acuerdos para ganar 2 (p),,Ammo,2,51st State
-Hideout,Escondite,,,,Descarta 1 de tus Acuerdos para ganar 1 (p). \nPuede ser activada 2 veces,,Star,2,51st State
-Underground Warehouse,Almacén subterráneo,,,Puedes guardar hasta 3 (g) / (f) / (ge) / (b) en esta carta durante la fase de limpieza. Agarralas de nuevo durante la fase de Producción,,,Fuel,1,51st State
 Oil Rig,Plataforma petrolera,1 (f) por cada (lb) en tu Estado. Máximo 3,,,,,Fuel,2,51st State
-Fuel Tank,Tanque de Combustible,,1 (f),,,,Fuel,2,51st State
-Motel,Motel,,,,Gasta 1 (w) para ganar 1 (c). \nPuede ser activada 2 veces,,Card,1,51st State
 Pub,Pub,,1 (c),,,1 (c),Card,2,51st State
-Sharrash,Sharrash,,1 (aw),,,1 (aw),Wild Arrow,1,51st State
-Museum,Museo,,,-,,1 (p) por cada (lg) en tu Estado. Máximo 5,Star,1,51st State
-Old Cinema,Cine Antiguo,,,-,,1 (p),Star,1,51st State
-Church,Iglesia,,,-,,2 (p),Star,2,51st State
-Wrecked Tank,Tanque destrozado,,,-,,1 (p) por cada (lg) en tu Estado. Máximo 5,Star,3,51st State
-Murderers Pub,Pub de asesinos,,,-,,1 (p) por cada (lr) en tu Estado. Máximo 5,Gun,1,51st State
-Shadow,Sombra,,,,Gasta 1 (ar) para ganar 1 (p). \nPuede ser activada 2 veces,,Gun,1,51st State
-Weapon Trader,Comerciante de armas,,,,Gasta 1 (g) para ganar 1 (p). \nPuede ser activada 2 veces,,Gun,1,51st State
-Bioweaponry,Bioarma,,,,Gasta 1 (w) y 1 (g) para ganar 2 (p),,Gun,2,51st State
-Gun Shop,Armería,,,,Gasta 1 (w) y 2 (g) para ganar 3 (p),,Gun,2,51st State
-Ruined Library,Biblioteca en ruinas,,,Puedes guardar hasta 3 (g) / (f) / (ge) / (b) en esta carta durante la fase de limpieza. Agarralas de nuevo durante la fase de Producción,,,Gun,1,51st State
-Assasin,Asesino,,1 (g),,,,Gun,2,51st State
-Arena,Arena,1 (g) por cada (lr) en tu Estado. Máximo 3,,,,,Gun,2,51st State
-Gunsmith,Armero,,,,Gasta 1 (g) para ganar 1 (ar). \nPuede ser activada 2 veces,,Red Arrow,1,51st State
-Confessor,Confesor,,,,Gasta 2 (g) para ganar 2 (p). \nPuede ser activada 2 veces,,Gun,1,51st State
-City Guards,Guardias de la ciudad,,,-,,Pone 3 (g) en esta carta. Puedes gastarlos durante tu turno. No los descartes durante la fase de limpieza,Gun,1,51st State
 Corner Shop,Tienda de la esquina,,,,Gasta 1 (w) y 1 (g) / (f) / (ge) / (b) para ganar 1 (p). \nPuede ser activada 2 veces,,Ammo,2,51st State
-Merc Outpost,Puesto avanzado de Merc,,,,Gasta 1 (g) / (f) / (ge) / (b) para ganar 2 (w),,Worker,1,51st State
-Thieves Caravan,Caravana de ladrones,,,,Gasta 2 (w) para tomar 1 (g) / (f) / (ge) / (b) de otro jugador. \nPuede ser activada 2 veces,,Ammo,1,51st State
-Deserted Colony,Colonia desierta,,,,Gasta 1 (w) para ganar 1 (a). \nPuede ser activada 2 veces,,Ammo,1,51st State
-Quarry,Cantera,,1 (b),,,,Brick,2,51st State

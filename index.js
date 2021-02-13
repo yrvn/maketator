@@ -2,17 +2,9 @@ const fs = require("fs");
 const { Image, createCanvas, loadImage, registerFont } = require("canvas");
 
 const csv = require("csv-parser");
+let img = 1;
 
-/*fs.createReadStream("data.csv")
-  .pipe(csv())
-  .on("data", (row) => {
-    console.log(row);
-  })
-  .on("end", () => {
-    console.log("CSV file successfully processed");
-  });*/
-
-const card = {
+/*const card = {
   Nombre: "Clay Pit",
   name: "Pozo de arcilla",
   production: "",
@@ -24,7 +16,7 @@ const card = {
   deal: "Worker",
   quantity: "1",
   set: "51st State",
-};
+};*/
 
 const width = 744;
 const height = 446;
@@ -79,20 +71,6 @@ const drawTitle = (data) => {
   ctx.fillText(data.name, 430, 27);
   ctx.restore();
 };
-/*
-const card = {
-  Nombre: "Clay Pit",
-  name: "Pozo de arcilla",
-  production: "1 (b)",
-  openprod: " 1 (d)",
-  feature: "-",
-  action: "Gasta 1 (w) y 1 (b) para ganar 2 (p)",
-  buildingbonus: "La lal lal al a",
-  deal: "Brick",
-  quantity: "1",
-  set: "51st State",
-};
- */
 const drawCardText = (data) => {
   console.log(
     data.production,
@@ -199,12 +177,16 @@ const drawDeal = (data) => {
   const dealWidth = width / 2 - 25;
   const dealHeight = 345;
   let dealImage = null;
+  console.log(data.deal);
   switch (data.deal) {
+    case "Ammo":
+      dealImage = images["a"];
+      break;
     case "Brick":
       dealImage = images["b"];
       break;
     case "Blue Arrow":
-      dealImage = images["ba"];
+      dealImage = images["aw"];
       break;
     case "Fuel":
       dealImage = images["f"];
@@ -242,39 +224,13 @@ const drawDeal = (data) => {
 
 const saveCard = () => {
   const buffer = canvas.toBuffer("image/png");
-  fs.writeFileSync("./test2.png", buffer);
+  fs.writeFileSync(`./out/img-${img}.png`, buffer);
+  img++;
 };
 
 const getIcon = (icon) => {
   return images[icon];
 };
-
-//ctx.translate(-375 * 2, -375 * 2);
-//ctx.translate(-375, -375);
-
-/*ctx.fillStyle = "#000";
-ctx.fillRect(0, 0, width, height);
-
-ctx.font = "bold 70pt";
-ctx.textAlign = "center";
-ctx.textBaseline = "top";
-ctx.fillStyle = "#3574d4";
-
-const text = "Hello, World!";
-
-const textWidth = ctx.measureText(text).width;
-ctx.fillRect(600 - textWidth / 2 - 10, 170 - 5, textWidth + 20, 120);
-ctx.fillStyle = "#fff";
-ctx.fillText(text, 600, 170);
-
-ctx.fillStyle = "#fff";
-ctx.font = "bold 30pt";
-ctx.fillText("flaviocopes.com", 600, 530);
-*/
-/*loadImage("./logo.png").then((image) => {
-  ctx.drawImage(image, 340, 515, 70, 70);
-
-});*/
 
 const getTextLine = (context, text, maxWidth, tabSize) => {
   let words = text.split(" ");
@@ -307,9 +263,7 @@ const getTextLine = (context, text, maxWidth, tabSize) => {
 const wrapText = (context, text, x, y, maxWidth, lineHeight, tabSize) => {
   context.font = "20pt Myriad Pro Cond";
   let replaced = text.replace(/\(([^)]+)\)/g, "---");
-  //const matches = text.matchAll(/\(([^)]+)\)/g);
   const matches = [...text.matchAll(/\(([^)]+)\)/g)];
-  //console.log(matches);
   var words = replaced.split(" ");
   var line = "";
   var firstLine = true;
@@ -330,7 +284,7 @@ const wrapText = (context, text, x, y, maxWidth, lineHeight, tabSize) => {
       let image = getIcon(icon[1]);
       let { index, input } = icon;
       let testLine = input.substring(0, index);
-      console.log(testLine);
+      //console.log(testLine);
       let metrics = context.measureText(testLine.replace(/\(([^)]+)\)/g, ""));
       if (j == 0) currentImgPositionX = tabSize + metrics.width;
       else currentImgPositionX = metrics.width - tabSize;
@@ -349,7 +303,7 @@ const wrapText = (context, text, x, y, maxWidth, lineHeight, tabSize) => {
     });
     j++;
   });
-  console.log("Text", textLines);
+  //console.log("Text", textLines);
   /*matches.forEach((icon) => {
     console.log(icon);
     let image = getIcon(icon[1]);
@@ -419,9 +373,16 @@ const wrapText = (context, text, x, y, maxWidth, lineHeight, tabSize) => {
   return lineHeight * lines;
 };
 
-drawBackground(card);
-drawTitle(card);
-drawCardText(card);
-drawDeal(card);
-
-saveCard();
+fs.createReadStream("data.csv")
+  .pipe(csv())
+  .on("data", (row) => {
+    console.log(row);
+    drawBackground(row);
+    drawTitle(row);
+    drawCardText(row);
+    drawDeal(row);
+    saveCard();
+  })
+  .on("end", () => {
+    console.log("CSV file successfully processed");
+  });
