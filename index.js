@@ -19,17 +19,16 @@ const card = {
   openprod: "",
   feature: "",
   action:
-    "Gasta 1 (w) y 1 (b) para ganar 2 (p) y si se hace largo seguroa adsad fasd fasdsdaf asd fasd fads  asfd fasd fdasf asd fads fadsdddadf asdf ads fasd f me va a andar mal esto claramente no? Que te parece?",
-  buildingbonus: "La lal lal al a",
+    "Gasta 1 (w) y 1 (b) para ganar 2 (p). Además si sigo (ge) escribiendo me voy a pasar para la 2da linea ",
+  buildingbonus: "",
   deal: "Worker",
   quantity: "1",
   set: "51st State",
 };
 
-//registerFont('fonts/DIRTYEGO.TTF', { family: 'Dirty Ego' })
-
 const width = 744;
 const height = 446;
+const initTextWidth = 180;
 
 const canvas = createCanvas(width, height);
 const ctx = canvas.getContext("2d");
@@ -109,12 +108,12 @@ const drawCardText = (data) => {
   const lineHeight = 35;
   if (data.production) {
     initText = "Producción: ".toUpperCase();
-    initTextSize = writeText(initText, 180, initTextHeight);
+    initTextSize = writeText(initText, initTextWidth, initTextHeight);
 
     initTextHeight += wrapText(
       ctx,
       data.production,
-      180 + initTextSize,
+      initTextWidth + initTextSize,
       135,
       450 - initTextSize,
       lineHeight,
@@ -123,12 +122,12 @@ const drawCardText = (data) => {
   }
   if (data.openprod) {
     initText = "Producción Abierta: ".toUpperCase();
-    initTextSize = writeText(initText, 180, initTextHeight);
+    initTextSize = writeText(initText, initTextWidth, initTextHeight);
     ctx.font = "20pt Myriad Pro Cond";
     initTextHeight += wrapText(
       ctx,
       data.openprod,
-      180 + initTextSize,
+      initTextWidth + initTextSize,
       135,
       450 - initTextSize,
       lineHeight,
@@ -137,11 +136,11 @@ const drawCardText = (data) => {
   }
   if (data.feature) {
     initText = "Apoyo: ".toUpperCase();
-    initTextSize = writeText(initText, 180, initTextHeight);
+    initTextSize = writeText(initText, initTextWidth, initTextHeight);
     initTextHeight += wrapText(
       ctx,
       data.feature,
-      180 + initTextSize,
+      initTextWidth + initTextSize,
       135,
       450 - initTextSize,
       lineHeight,
@@ -151,14 +150,14 @@ const drawCardText = (data) => {
 
   if (data.action) {
     initText = "Acción: ".toUpperCase();
-    initTextSize = writeText(initText, 180, initTextHeight);
+    initTextSize = writeText(initText, initTextWidth, initTextHeight);
     console.log(initTextSize);
     console.log(initTextHeight);
 
     initTextHeight += wrapText(
       ctx,
       data.action,
-      180 + initTextSize,
+      initTextWidth + initTextSize,
       initTextHeight,
       450 - initTextSize,
       lineHeight,
@@ -169,12 +168,12 @@ const drawCardText = (data) => {
 
   if (data.buildingbonus) {
     initText = "Bonus de Construcción: ".toUpperCase();
-    initTextSize = writeText(initText, 180, initTextHeight);
+    initTextSize = writeText(initText, initTextWidth, initTextHeight);
     ctx.font = "20pt Myriad Pro Cond";
     initTextHeight += wrapText(
       ctx,
       data.buildingbonus,
-      180 + initTextSize,
+      initTextWidth + initTextSize,
       initTextHeight,
       450 - initTextSize,
       lineHeight,
@@ -197,7 +196,6 @@ const writeText = (text, x, y, weight) => {
 };
 
 const drawDeal = (data) => {
-  console.log(data);
   const dealWidth = width / 2 - 25;
   const dealHeight = 345;
   let dealImage = null;
@@ -230,7 +228,16 @@ const drawDeal = (data) => {
       dealImage = images["w"];
       break;
   }
-  ctx.drawImage(dealImage, dealWidth, dealHeight, 60, 60);
+
+  const centerX = dealWidth + 30;
+  const centerY = dealHeight + 30;
+
+  ctx.save();
+  ctx.translate(centerX, centerY);
+  ctx.rotate((Math.PI / 180) * 180);
+  ctx.drawImage(dealImage, -30, -30, 60, 60);
+  ctx.translate(-centerX, -centerY);
+  ctx.restore();
 };
 
 const saveCard = () => {
@@ -241,26 +248,6 @@ const saveCard = () => {
 const getIcon = (icon) => {
   return images[icon];
 };
-
-/*ctx.strokeStyle = "red";
-ctx.moveTo(425, 20);
-ctx.lineTo(425, 170);
-ctx.stroke();*/
-
-//ctx.fillStyle = "#3574d4";
-//const textWidth = ctx.measureText(text).width;
-//ctx.fillRect(600 - textWidth / 2 - 10, 170 - 5, textWidth + 20, 120);
-
-//ctx.save();
-//ctx.translate(375 * 2, 375 * 2);
-//ctx.translate(375, 375);
-//ctx.rotate((Math.PI / 180) * 0.2);
-
-drawBackground(card);
-drawTitle(card);
-drawDeal(card);
-drawCardText(card);
-saveCard();
 
 //ctx.translate(-375 * 2, -375 * 2);
 //ctx.translate(-375, -375);
@@ -289,15 +276,119 @@ ctx.fillText("flaviocopes.com", 600, 530);
 
 });*/
 
-function wrapText(context, text, x, y, maxWidth, lineHeight, tabSize) {
-  //console.log(lineHeight);
+const getTextLine = (context, text, maxWidth, tabSize) => {
+  let words = text.split(" ");
+  let line = "";
+  let lines = [];
+  let maxWidthTest = maxWidth;
+  for (let n = 0; n < words.length; n++) {
+    if (lines.length == 0) {
+      maxWidthTest = maxWidth;
+    } else {
+      //maxWidthTest = maxWidth - tabSize;
+    }
+    const word = words[n];
+    let testLine = line + word + " ";
+    let metrics = context.measureText(testLine);
+    let testWidth = metrics.width;
+    if (testWidth > maxWidthTest && n > 0) {
+      lines.push(testLine);
+      line = "";
+    } else {
+      line = testLine;
+      if (words.length == n + 1) {
+        lines.push(testLine);
+      }
+    }
+  }
+  return lines;
+};
+
+const wrapText = (context, text, x, y, maxWidth, lineHeight, tabSize) => {
   context.font = "20pt Myriad Pro Cond";
-  var words = text.split(" ");
+  let replaced = text.replace(/\(([^)]+)\)/g, "---");
+  //const matches = text.matchAll(/\(([^)]+)\)/g);
+  const matches = [...text.matchAll(/\(([^)]+)\)/g)];
+  //console.log(matches);
+  var words = replaced.split(" ");
   var line = "";
   var firstLine = true;
   var lines = 1;
+  let initTextHeight = 135;
+  let initImgPositionX = 180;
+  let currentImgPositionX = 0;
+  let first = true;
+  let i = 0;
+  let j = 0;
 
-  for (var n = 0; n < words.length; n++) {
+  let textLines = getTextLine(context, text, maxWidth, tabSize);
+
+  textLines.forEach((line) => {
+    const matches = [...line.matchAll(/\(([^)]+)\)/g)];
+    currentImgPositionX = 0;
+    matches.forEach((icon) => {
+      let image = getIcon(icon[1]);
+      let { index, input } = icon;
+      let testLine = input.substring(0, index);
+      console.log(testLine);
+      let metrics = context.measureText(testLine.replace(/\(([^)]+)\)/g, ""));
+      if (j == 0) currentImgPositionX = tabSize + metrics.width;
+      else currentImgPositionX = metrics.width - tabSize;
+
+      if (!first) currentImgPositionX += 27 * i;
+      first = false;
+      i++;
+
+      context.drawImage(
+        image,
+        initImgPositionX + currentImgPositionX,
+        initTextHeight + lineHeight * j,
+        30,
+        30
+      );
+    });
+    j++;
+  });
+  console.log("Text", textLines);
+  /*matches.forEach((icon) => {
+    console.log(icon);
+    let image = getIcon(icon[1]);
+    let { index, input } = icon;
+
+    let testLine = input.substring(0, index);
+    console.log(testLine);
+    let metrics = context.measureText(testLine.replace(/\(([^)]+)\)/g, ""));
+    currentImgPositionX = tabSize + metrics.width;
+    //if (currentImgPositionX > maxWidth) {
+     // initTextHeight += lineHeight * j;
+      //j++;
+      //currentImgPositionX = 0;
+    //}
+    console.log(
+      "LOG",
+      textLines.find((el) => el.includes(testLine))
+    );
+
+    if (!first) currentImgPositionX += 27 * i;
+    first = false;
+    i++;
+    console.log(initTextHeight);
+    context.drawImage(
+      image,
+      initImgPositionX + currentImgPositionX,
+      initTextHeight,
+      30,
+      30
+    );
+  });*/
+
+  /*for (var n = 0; n < words.length; n++) {
+    if (words[n] === "---") {
+      words[n] = "       ";
+    }
+    if (words[n] === "---.") {
+      words[n] = "       .";
+    }
     var testLine = line + words[n] + " ";
     var metrics = context.measureText(testLine);
     var testWidth = metrics.width;
@@ -315,8 +406,22 @@ function wrapText(context, text, x, y, maxWidth, lineHeight, tabSize) {
     } else {
       line = testLine;
     }
+  }*/
+  for (let i = 0; i < textLines.length; i++) {
+    let line = textLines[i];
+    line = line.replace(/\(([^)]+)\)/g, "       ");
+    if (i == 1) {
+      x = x - tabSize;
+    }
+    context.fillText(line, x, y - lineHeight + lineHeight * (i + 1));
   }
-  context.fillText(line, x, y);
-  //  console.log("Y: ", y, "lineheight: ", lineHeight);
+
   return lineHeight * lines;
-}
+};
+
+drawBackground(card);
+drawTitle(card);
+drawCardText(card);
+drawDeal(card);
+
+saveCard();
