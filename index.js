@@ -6,6 +6,8 @@ let img = 1;
 const width = 744;
 const height = 446;
 const initTextWidth = 180;
+let initTextHeight = 135;
+const initMaxWidth = 470;
 
 const canvas = createCanvas(width, height);
 const ctx = canvas.getContext("2d");
@@ -38,7 +40,11 @@ const drawBackground = (data) => {
     case "New Era":
       background = images["base-newera"];
       break;
-    default:
+    case "Scavengers":
+      background = images["base-scavengers"];
+      break;
+    case "Promo Set":
+      background = images["base-promoset"];
       break;
   }
   ctx.clearRect(0, 0, width, height);
@@ -60,7 +66,7 @@ let amount = 0;
 const drawCardText = (data) => {
   amount = 0;
   let initText = "";
-  let initTextHeight = 135;
+  initTextHeight = 135;
   let initTextSize = 0;
   const lineHeight = 35;
 
@@ -74,7 +80,7 @@ const drawCardText = (data) => {
       data.production,
       initTextWidth + initTextSize,
       135,
-      450 - initTextSize,
+      initMaxWidth - initTextSize,
       lineHeight,
       initTextSize
     );
@@ -90,7 +96,7 @@ const drawCardText = (data) => {
       data.openprod,
       initTextWidth + initTextSize,
       135,
-      450 - initTextSize,
+      initMaxWidth - initTextSize,
       lineHeight,
       initTextSize
     );
@@ -104,7 +110,7 @@ const drawCardText = (data) => {
       data.feature,
       initTextWidth + initTextSize,
       135,
-      450 - initTextSize,
+      initMaxWidth - initTextSize,
       lineHeight,
       initTextSize
     );
@@ -120,7 +126,7 @@ const drawCardText = (data) => {
       data.action,
       initTextWidth + initTextSize,
       initTextHeight,
-      450 - initTextSize,
+      initMaxWidth - initTextSize,
       lineHeight,
       initTextSize
     );
@@ -136,10 +142,15 @@ const drawCardText = (data) => {
       data.buildingbonus,
       initTextWidth + initTextSize,
       initTextHeight,
-      450 - initTextSize,
+      initMaxWidth - initTextSize,
       lineHeight,
       initTextSize
     );
+  }
+
+  if (data.shield) {
+    let shield = images["shield"];
+    ctx.drawImage(shield, 744 - 104, -59.5, 116, 119);
   }
 };
 
@@ -168,7 +179,7 @@ const drawDeal = (data) => {
       dealImage = images["b"];
       break;
     case "Blue Arrow":
-      dealImage = images["aw"];
+      dealImage = images["ab"];
       break;
     case "Fuel":
       dealImage = images["f"];
@@ -186,10 +197,25 @@ const drawDeal = (data) => {
       dealImage = images["g"];
       break;
     case "Red Arrow":
-      dealImage = images["b"];
+      dealImage = images["ar"];
       break;
     case "Worker":
       dealImage = images["w"];
+      break;
+    case "Gear":
+      dealImage = images["ge"];
+      break;
+    case "Develop":
+      dealImage = images["d"];
+      break;
+    case "Grey Arrow":
+      dealImage = images["ag"];
+      break;
+    case "Shield":
+      dealImage = images["s"];
+      break;
+    case "Ruins":
+      dealImage = images["r"];
       break;
   }
 
@@ -236,7 +262,7 @@ const getTextLine = (context, text, maxWidth, tabSize) => {
       testWidth = 1000;
     }
 
-    if (testWidth > maxWidthTest && n > 0) {
+    if (testWidth > maxWidthTest && n > 0 && testLine.length > 0) {
       lines.push(testLine);
       line = "";
     } else {
@@ -259,7 +285,7 @@ const wrapText = (context, text, x, y, maxWidth, lineHeight, tabSize) => {
   var line = "";
   var firstLine = true;
   var lines = 1;
-  let initTextHeight = 135;
+
   let initImgPositionX = 180;
   let currentImgPositionX = 0;
   let first = true;
@@ -268,13 +294,20 @@ const wrapText = (context, text, x, y, maxWidth, lineHeight, tabSize) => {
 
   let textLines = getTextLine(context, text, maxWidth, tabSize);
 
+  for (let i = 0; i < textLines.length; i++) {
+    let line = textLines[i];
+    line = line.replace(/\(([^)]+)\)/g, "       ");
+    if (i == 1) {
+      x = x - tabSize;
+    }
+    context.fillText(line, x, y - lineHeight + lineHeight * (i + 1));
+    lines = i + 1;
+  }
+
   textLines.forEach((line) => {
     const matches = [...line.matchAll(/\(([^)]+)\)/g)];
     currentImgPositionX = 0;
     first = true;
-    if (amount > 1) {
-      initTextHeight = initTextHeight + 35;
-    }
     matches.forEach((icon) => {
       let image = getIcon(icon[1]);
       let { index, input } = icon;
@@ -298,22 +331,13 @@ const wrapText = (context, text, x, y, maxWidth, lineHeight, tabSize) => {
     });
     j++;
   });
-
-  for (let i = 0; i < textLines.length; i++) {
-    let line = textLines[i];
-    line = line.replace(/\(([^)]+)\)/g, "       ");
-    if (i == 1) {
-      x = x - tabSize;
-    }
-    context.fillText(line, x, y - lineHeight + lineHeight * (i + 1));
-  }
-
   return lineHeight * lines;
 };
 
 fs.createReadStream("data.csv")
   .pipe(csv())
   .on("data", (row) => {
+    console.log(`Processing ${row.name}`);
     for (let i = 1; i <= row.quantity; i++) {
       drawBackground(row);
       drawTitle(row);
